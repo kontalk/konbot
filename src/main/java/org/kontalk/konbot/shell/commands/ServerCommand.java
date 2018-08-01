@@ -32,7 +32,7 @@ public class ServerCommand extends AbstractCommand implements HelpableCommand {
 
     @Override
     public String description() {
-        return "Set server connection parameters.";
+        return "Set server connection parameters";
     }
 
     @Override

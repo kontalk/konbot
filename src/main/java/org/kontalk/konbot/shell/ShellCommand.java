@@ -28,6 +28,8 @@ public interface ShellCommand {
 
     String description();
 
+    void setParentShell(ParentShell shell);
+
     void setOutput(PrintWriter writer);
 
     void run(String[] args, Map<String, Object> session);

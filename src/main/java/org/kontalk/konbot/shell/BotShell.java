@@ -18,20 +18,21 @@
 
 package org.kontalk.konbot.shell;
 
+import org.clapper.util.classutil.*;
 import org.jline.reader.*;
 import org.jline.reader.impl.DefaultParser;
 import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
 import org.kontalk.konbot.shell.commands.AbstractCommand;
-import org.kontalk.konbot.shell.commands.PersonalKeyCommand;
-import org.kontalk.konbot.shell.commands.ServerCommand;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Map;
 import java.util.TreeMap;
 
 
-public class BotShell {
+public class BotShell implements ParentShell {
 
     private static final String PROMPT = "konbot > ";
 
@@ -51,12 +52,26 @@ public class BotShell {
                 .build();
     }
 
-    public void init() {
-        // TODO use reflection
+    public void init() throws ClassUtilException {
+        // built-in commands
         addCommand(new HelpCommand());
         addCommand(new ExitCommand());
-        addCommand(new ServerCommand());
-        addCommand(new PersonalKeyCommand());
+
+        Collection<ClassInfo> commands = new ArrayList<>();
+        ClassFilter filter = new AndClassFilter(
+                new SubclassClassFilter(ShellCommand.class),
+                new NotClassFilter(new AbstractClassFilter())
+        );
+        ClassFinder finder = new ClassFinder();
+        finder.addClassPath();
+
+        if (finder.findClasses(commands, filter) > 0) {
+            for (ClassInfo info : commands) {
+                String clsName = info.getClassName();
+                if (!clsName.startsWith(getClass().getName() + "$"))
+                    addCommand((ShellCommand) ClassUtil.instantiateClass(info.getClassName()));
+            }
+        }
     }
 
     private void addCommand(ShellCommand cmd) {
@@ -74,20 +89,18 @@ public class BotShell {
                 if (args.length == 0 || args[0].length() == 0)
                     continue;
 
-                ShellCommand cmd = commands.get(args[0]);
-                if (cmd == null)
-                    throw new CommandNotFoundException(args[0]);
-
-                cmd.run(args, session);
+                runCommand(args);
             }
             catch (CommandNotFoundException e) {
                 terminal.writer().println("Command not found: " + e.getMessage());
             }
             catch (UserInterruptException e) {
                 terminal.writer().println("Interrupt");
+                stop();
             }
             catch (EndOfFileException e) {
                 terminal.writer().println("End-of-file");
+                stop();
             }
             catch (Exception e) {
                 terminal.writer().println("Command error: " + e);
@@ -96,7 +109,44 @@ public class BotShell {
     }
 
     public void stop() {
+        end();
         running = false;
+    }
+
+    private void end() {
+        terminal.flush();
+    }
+
+    public void run(String[] args) {
+        try {
+            runCommand(args);
+        }
+        catch (CommandNotFoundException e) {
+            terminal.writer().println("Command not found: " + e.getMessage());
+        }
+        catch (UserInterruptException e) {
+            terminal.writer().println("Interrupt");
+            stop();
+        }
+        catch (EndOfFileException e) {
+            terminal.writer().println("End-of-file");
+            stop();
+        }
+        catch (Exception e) {
+            terminal.writer().println("Command error: " + e);
+        }
+        finally {
+            end();
+        }
+    }
+
+    @Override
+    public void runCommand(String[] args) throws CommandNotFoundException {
+        ShellCommand cmd = commands.get(args[0]);
+        if (cmd == null)
+            throw new CommandNotFoundException(args[0]);
+
+        cmd.run(args, session);
     }
 
     /** Help command. */
@@ -111,7 +161,7 @@ public class BotShell {
 
         @Override
         public String description() {
-            return "Provide help for commands.";
+            return "Provide help for commands";
         }
 
         @Override
@@ -160,7 +210,7 @@ public class BotShell {
 
         @Override
         public String description() {
-            return "Exit the program.";
+            return "Exit the program";
         }
 
         @Override
@@ -171,12 +221,6 @@ public class BotShell {
         @Override
         public void help() {
             println("Usage: "+name());
-        }
-    }
-
-    private static final class CommandNotFoundException extends Exception {
-        CommandNotFoundException(String name) {
-            super(name);
         }
     }
 

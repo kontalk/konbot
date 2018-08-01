@@ -18,6 +18,7 @@
 
 package org.kontalk.konbot.shell.commands;
 
+import org.kontalk.konbot.shell.ParentShell;
 import org.kontalk.konbot.shell.ShellCommand;
 
 import java.io.PrintWriter;
@@ -27,9 +28,16 @@ public abstract class AbstractCommand implements ShellCommand {
 
     protected PrintWriter out;
 
+    protected ParentShell shell;
+
     @Override
     public void setOutput(PrintWriter writer) {
-        out = writer;
+        this.out = writer;
+    }
+
+    @Override
+    public void setParentShell(ParentShell shell) {
+        this.shell = shell;
     }
 
     protected void printf(String fmt, Object... args) {

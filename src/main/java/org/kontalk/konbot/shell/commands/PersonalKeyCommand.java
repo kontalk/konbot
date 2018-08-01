@@ -32,7 +32,7 @@ public class PersonalKeyCommand extends AbstractCommand implements HelpableComma
 
     @Override
     public String description() {
-        return "Set personal key data.";
+        return "Set personal key data";
     }
 
     @Override

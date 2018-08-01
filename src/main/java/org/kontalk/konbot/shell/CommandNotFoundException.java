@@ -16,29 +16,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.kontalk.konbot;
-
-import org.kontalk.konbot.shell.BotShell;
+package org.kontalk.konbot.shell;
 
 
-public class Konbot {
-
-    public static void main(String[] args) {
-        try {
-            BotShell sh = new BotShell();
-            sh.init();
-
-            if (args.length > 0) {
-                sh.run(args);
-            }
-            else {
-                sh.start();
-            }
+public class CommandNotFoundException extends Exception {
+    CommandNotFoundException(String name) {
+            super(name);
         }
-        catch (Exception e) {
-            e.printStackTrace();
-            System.exit(1);
-        }
-    }
-
 }
