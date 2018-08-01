@@ -145,11 +145,11 @@ public class KontalkConnection extends XMPPTCPConnection {
                 // in-memory keystore
                 KeyStore keystore = KeyStore.getInstance(KeyStore.getDefaultType());
                 keystore.load(null, null);
-                keystore.setKeyEntry("private", privateKey, null, new Certificate[] { bridgeCert });
+                keystore.setKeyEntry("private", privateKey, new char[0], new Certificate[] { bridgeCert });
 
                 // key managers
                 KeyManagerFactory kmFactory = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
-                kmFactory.init(keystore, null);
+                kmFactory.init(keystore, new char[0]);
 
                 km = kmFactory.getKeyManagers();
 

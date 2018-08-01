@@ -18,6 +18,8 @@
 
 package org.kontalk.konbot.client;
 
+import org.jivesoftware.smack.SmackConfiguration;
+import org.jivesoftware.smack.debugger.ConsoleDebugger;
 import org.jivesoftware.smack.roster.Roster;
 import org.jivesoftware.smackx.iqversion.VersionManager;
 
@@ -39,6 +41,9 @@ public class SmackInitializer {
 
             // we want to manually handle roster stuff
             Roster.setDefaultSubscriptionMode(Roster.SubscriptionMode.accept_all);
+
+            // console debugger
+            SmackConfiguration.setDefaultSmackDebuggerFactory(ConsoleDebugger.Factory.INSTANCE);
 
             sInitialized = true;
         }

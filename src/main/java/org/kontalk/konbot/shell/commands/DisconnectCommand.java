@@ -18,9 +18,10 @@
 
 package org.kontalk.konbot.shell.commands;
 
+import org.kontalk.konbot.client.KontalkConnection;
+import org.kontalk.konbot.client.XMPPTCPConnection;
 import org.kontalk.konbot.shell.HelpableCommand;
-
-import java.util.Map;
+import org.kontalk.konbot.shell.ShellSession;
 
 
 @SuppressWarnings("unused")
@@ -37,9 +38,19 @@ public class DisconnectCommand extends AbstractCommand implements HelpableComman
     }
 
     @Override
-    public void run(String[] args, Map<String, Object> session) {
-        // TODO connect
-        println("Not implemented.");
+    public void run(String[] args, ShellSession session) {
+        XMPPTCPConnection conn = connection(session);
+        if (conn == null || !conn.isConnected()) {
+            println("Not connected.");
+        }
+        else {
+            println("Disconnecting.");
+            conn.disconnect();
+        }
+    }
+
+    protected KontalkConnection connection(ShellSession session) {
+        return (KontalkConnection) session.get("connection");
     }
 
     @Override

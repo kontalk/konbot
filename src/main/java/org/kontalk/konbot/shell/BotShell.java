@@ -40,7 +40,7 @@ public class BotShell implements ParentShell {
     private final LineReader reader;
 
     private Map<String, ShellCommand> commands = new TreeMap<>();
-    private Map<String, Object> session = new TreeMap<>();
+    private ShellSession session = new ShellSession();
 
     private volatile boolean running;
 
@@ -165,7 +165,7 @@ public class BotShell implements ParentShell {
         }
 
         @Override
-        public void run(String[] args, Map<String, Object> session) {
+        public void run(String[] args, ShellSession session) {
             if (args.length < 2) {
                 list();
                 return;
@@ -214,7 +214,7 @@ public class BotShell implements ParentShell {
         }
 
         @Override
-        public void run(String[] args, Map<String, Object> session) {
+        public void run(String[] args, ShellSession session) {
             stop();
         }
 

@@ -18,13 +18,18 @@
 
 package org.kontalk.konbot.shell.commands;
 
+import org.bouncycastle.openpgp.PGPException;
+import org.kontalk.konbot.crypto.PGP;
 import org.kontalk.konbot.crypto.PersonalKey;
 import org.kontalk.konbot.crypto.PersonalKeyImporter;
+import org.kontalk.konbot.crypto.X509Bridge;
 import org.kontalk.konbot.shell.HelpableCommand;
+import org.kontalk.konbot.shell.ShellSession;
 import org.kontalk.konbot.util.StreamUtils;
 
 import java.io.FileInputStream;
-import java.util.Map;
+import java.io.IOException;
+import java.security.cert.X509Certificate;
 import java.util.zip.ZipInputStream;
 
 
@@ -42,7 +47,7 @@ public class PersonalKeyCommand extends AbstractCommand implements HelpableComma
     }
 
     @Override
-    public void run(String[] args, Map<String, Object> session) {
+    public void run(String[] args, ShellSession session) {
         if (args.length < 3) {
             help();
             return;
@@ -59,6 +64,27 @@ public class PersonalKeyCommand extends AbstractCommand implements HelpableComma
             importer.load();
 
             PersonalKey key = importer.createPersonalKey();
+            if (key == null)
+                throw new PGPException("Unable to load personal key");
+
+            byte[] privateKeyData = importer.getPrivateKeyData();
+            byte[] publicKeyData = importer.getPublicKeyData();
+
+            // load the keyring
+            PGP.PGPKeyPairRing ring;
+            try {
+                ring = PGP.PGPKeyPairRing.loadArmored(privateKeyData, publicKeyData);
+            }
+            catch (IOException e) {
+                // try not armored
+                ring = PGP.PGPKeyPairRing.load(privateKeyData, publicKeyData);
+            }
+
+            // bridge certificate for connection
+            X509Certificate bridgeCert = X509Bridge.createCertificate(ring.publicKey, ring.secretKey.getSecretKey(), passphrase);
+
+            // and now the real final key
+            key = PersonalKey.load(ring.secretKey, ring.publicKey, passphrase, bridgeCert);
             session.put("auth.personalkey", key);
         }
         catch (Exception e) {

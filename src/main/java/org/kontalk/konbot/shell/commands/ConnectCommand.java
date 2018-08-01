@@ -18,13 +18,19 @@
 
 package org.kontalk.konbot.shell.commands;
 
+import org.bouncycastle.openpgp.PGPException;
+import org.jxmpp.stringprep.XmppStringprepException;
+import org.kontalk.konbot.client.EndpointServer;
+import org.kontalk.konbot.client.KontalkConnection;
+import org.kontalk.konbot.crypto.PersonalKey;
 import org.kontalk.konbot.shell.HelpableCommand;
-
-import java.util.Map;
+import org.kontalk.konbot.shell.ShellSession;
 
 
 @SuppressWarnings("unused")
 public class ConnectCommand extends AbstractCommand implements HelpableCommand {
+
+    private static final String DEFAULT_RESOURCE = "konbot";
 
     @Override
     public String name() {
@@ -37,9 +43,54 @@ public class ConnectCommand extends AbstractCommand implements HelpableCommand {
     }
 
     @Override
-    public void run(String[] args, Map<String, Object> session) {
-        // TODO connect
-        println("Not implemented.");
+    public void run(String[] args, ShellSession session) {
+        KontalkConnection conn = connection(session);
+        if (conn != null && conn.isConnected()) {
+            println("Already connected.");
+        }
+        else {
+            if (conn == null) {
+                try {
+                    conn = createConnection(session);
+                }
+                catch (Exception e) {
+                    println("Unable to create connection: " + e);
+                    e.printStackTrace(out);
+                }
+            }
+
+            if (conn != null) {
+                try {
+                    conn.connect();
+                    conn.login();
+                }
+                catch (Exception e) {
+                    println("Unable to connect: " + e);
+                    e.printStackTrace(out);
+                }
+            }
+        }
+    }
+
+    private KontalkConnection createConnection(ShellSession session) throws PGPException, XmppStringprepException {
+        PersonalKey key = (PersonalKey) session.get("auth.personalkey");
+        String xmppDomain = (String) session.get("server.xmppdomain");
+
+        if (key == null || xmppDomain == null)
+            throw new IllegalArgumentException("Session is not ready");
+
+        String host = (String) session.get("server.host");
+        int port = session.getInt("server.port", EndpointServer.DEFAULT_PORT);
+        EndpointServer server = new EndpointServer(xmppDomain, host, port);
+
+        KontalkConnection conn = new KontalkConnection(DEFAULT_RESOURCE, server, false,
+                key.getBridgePrivateKey(), key.getBridgeCertificate(), true, null);
+        session.put("connection", conn);
+        return conn;
+    }
+
+    protected KontalkConnection connection(ShellSession session) {
+        return (KontalkConnection) session.get("connection");
     }
 
     @Override

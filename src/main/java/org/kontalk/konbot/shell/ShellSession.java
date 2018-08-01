@@ -18,20 +18,22 @@
 
 package org.kontalk.konbot.shell;
 
-import java.io.PrintWriter;
-import java.util.Map;
+import java.util.TreeMap;
 
 
-public interface ShellCommand {
+public class ShellSession extends TreeMap<String, Object> {
 
-    String name();
+    public ShellSession() {
+        super();
+    }
 
-    String description();
-
-    void setParentShell(ParentShell shell);
-
-    void setOutput(PrintWriter writer);
-
-    void run(String[] args, ShellSession session);
+    public int getInt(String key, int defaultValue) {
+        try {
+            return (int) get(key);
+        }
+        catch (ClassCastException | NullPointerException e) {
+            return defaultValue;
+        }
+    }
 
 }

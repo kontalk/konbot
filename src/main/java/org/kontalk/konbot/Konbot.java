@@ -21,6 +21,13 @@ package org.kontalk.konbot;
 import org.kontalk.konbot.client.SmackInitializer;
 import org.kontalk.konbot.crypto.PGP;
 import org.kontalk.konbot.shell.BotShell;
+import org.kontalk.konbot.util.StreamUtils;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.logging.Level;
+import java.util.logging.LogManager;
+import java.util.logging.Logger;
 
 
 public class Konbot {
@@ -31,6 +38,21 @@ public class Konbot {
         this.args = args;
         SmackInitializer.initialize();
         PGP.registerProvider();
+        initLog();
+    }
+
+    private void initLog() {
+        InputStream in = null;
+        try {
+            in = getClass().getResourceAsStream("/logging.properties");
+            LogManager.getLogManager().readConfiguration(in);
+        }
+        catch (IOException e) {
+            Logger.getAnonymousLogger().log(Level.SEVERE, "Unable to load logging configuration", e);
+        }
+        finally {
+            StreamUtils.close(in);
+        }
     }
 
     public void run() {

@@ -19,8 +19,7 @@
 package org.kontalk.konbot.shell.commands;
 
 import org.kontalk.konbot.shell.HelpableCommand;
-
-import java.util.Map;
+import org.kontalk.konbot.shell.ShellSession;
 
 
 @SuppressWarnings("unused")
@@ -37,7 +36,7 @@ public class ServerCommand extends AbstractCommand implements HelpableCommand {
     }
 
     @Override
-    public void run(String[] args, Map<String, Object> session) {
+    public void run(String[] args, ShellSession session) {
         if (args.length < 2) {
             help();
             return;
