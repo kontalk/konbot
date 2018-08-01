@@ -16,24 +16,40 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.kontalk.konbot;
+package org.kontalk.konbot.shell.commands;
 
-import org.kontalk.konbot.shell.BotShell;
+import org.kontalk.konbot.shell.ShellCommand;
+
+import java.io.PrintWriter;
 
 
-public class Konbot {
+public abstract class AbstractCommand implements ShellCommand {
 
-    public static void main(String[] args) {
-        // TODO
-        try {
-            BotShell sh = new BotShell();
-            sh.init();
-            sh.start();
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-            System.exit(1);
-        }
+    protected PrintWriter out;
+
+    @Override
+    public void setOutput(PrintWriter writer) {
+        out = writer;
+    }
+
+    protected void printf(String fmt, Object... args) {
+        print(String.format(fmt, args));
+    }
+
+    protected void printlnf(String fmt, Object... args) {
+        println(String.format(fmt, args));
+    }
+
+    protected void print(Object msg) {
+        out.println(msg);
+    }
+
+    protected void println() {
+        out.println();
+    }
+
+    protected void println(Object msg) {
+        out.println(msg);
     }
 
 }

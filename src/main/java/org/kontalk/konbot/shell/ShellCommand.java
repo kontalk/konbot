@@ -16,24 +16,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.kontalk.konbot;
+package org.kontalk.konbot.shell;
 
-import org.kontalk.konbot.shell.BotShell;
+import java.io.PrintWriter;
+import java.util.Map;
 
 
-public class Konbot {
+public interface ShellCommand {
 
-    public static void main(String[] args) {
-        // TODO
-        try {
-            BotShell sh = new BotShell();
-            sh.init();
-            sh.start();
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-            System.exit(1);
-        }
-    }
+    String name();
+
+    String description();
+
+    void setOutput(PrintWriter writer);
+
+    void run(String[] args, Map<String, Object> session);
 
 }

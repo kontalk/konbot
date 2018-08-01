@@ -16,24 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.kontalk.konbot;
-
-import org.kontalk.konbot.shell.BotShell;
+package org.kontalk.konbot.shell;
 
 
-public class Konbot {
-
-    public static void main(String[] args) {
-        // TODO
-        try {
-            BotShell sh = new BotShell();
-            sh.init();
-            sh.start();
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-            System.exit(1);
-        }
-    }
-
+public interface HelpableCommand {
+    void help();
 }
