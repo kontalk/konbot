@@ -16,34 +16,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.kontalk.konbot.shell.commands;
-
-import org.kontalk.konbot.shell.HelpableCommand;
-
-import java.util.Map;
+package org.kontalk.konbot.crypto;
 
 
-@SuppressWarnings("unused")
-public class ConnectCommand extends AbstractCommand implements HelpableCommand {
+/**
+ * PGP key flags not supported by Bouncy Castle.
+ * @author Daniele
+ */
+public class PGPKeyFlags implements org.bouncycastle.openpgp.PGPKeyFlags {
 
-    @Override
-    public String name() {
-        return "connect";
-    }
+    public static final int CAN_AUTHENTICATE = 0x20; // This key may be used for authentication.
 
-    @Override
-    public String description() {
-        return "Connect to server";
-    }
-
-    @Override
-    public void run(String[] args, Map<String, Object> session) {
-        // TODO connect
-        println("Not implemented.");
-    }
-
-    @Override
-    public void help() {
-        println("Usage: "+name());
-    }
 }

@@ -23,6 +23,7 @@ import org.kontalk.konbot.shell.HelpableCommand;
 import java.util.Map;
 
 
+@SuppressWarnings("unused")
 public class DisconnectCommand extends AbstractCommand implements HelpableCommand {
 
     @Override

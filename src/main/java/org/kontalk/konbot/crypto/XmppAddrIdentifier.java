@@ -16,34 +16,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.kontalk.konbot.shell.commands;
+package org.kontalk.konbot.crypto;
 
-import org.kontalk.konbot.shell.HelpableCommand;
+import org.bouncycastle.asn1.ASN1Encodable;
+import org.bouncycastle.asn1.ASN1ObjectIdentifier;
+import org.bouncycastle.asn1.DERUTF8String;
+import org.bouncycastle.asn1.DLSequence;
 
-import java.util.Map;
 
+/**
+ * xmppAddr X.509 identifier.
+ * http://xmpp.org/rfcs/rfc6120.html#security-certificates-generation-xmppaddr
+ */
+public class XmppAddrIdentifier extends DLSequence {
 
-@SuppressWarnings("unused")
-public class ConnectCommand extends AbstractCommand implements HelpableCommand {
+    public static final ASN1ObjectIdentifier OID = new ASN1ObjectIdentifier("1.3.6.1.5.5.7.8.5");
 
-    @Override
-    public String name() {
-        return "connect";
+    public XmppAddrIdentifier(String jid) {
+        super(new ASN1Encodable[] {
+            OID,
+            new DERUTF8String(jid)
+        });
     }
 
-    @Override
-    public String description() {
-        return "Connect to server";
-    }
-
-    @Override
-    public void run(String[] args, Map<String, Object> session) {
-        // TODO connect
-        println("Not implemented.");
-    }
-
-    @Override
-    public void help() {
-        println("Usage: "+name());
-    }
 }

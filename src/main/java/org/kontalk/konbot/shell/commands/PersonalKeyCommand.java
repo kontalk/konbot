@@ -18,11 +18,17 @@
 
 package org.kontalk.konbot.shell.commands;
 
+import org.kontalk.konbot.crypto.PersonalKey;
+import org.kontalk.konbot.crypto.PersonalKeyImporter;
 import org.kontalk.konbot.shell.HelpableCommand;
+import org.kontalk.konbot.util.StreamUtils;
 
+import java.io.FileInputStream;
 import java.util.Map;
+import java.util.zip.ZipInputStream;
 
 
+@SuppressWarnings("unused")
 public class PersonalKeyCommand extends AbstractCommand implements HelpableCommand {
 
     @Override
@@ -45,8 +51,24 @@ public class PersonalKeyCommand extends AbstractCommand implements HelpableComma
         String keypackFile = args[1];
         String passphrase = args[2];
 
-        // TODO open keypack immediately and put parsed stuff in session
-        println("Not implemented.");
+        ZipInputStream in = null;
+        PersonalKeyImporter importer = null;
+        try {
+            in = new ZipInputStream(new FileInputStream(keypackFile));
+            importer = new PersonalKeyImporter(in, passphrase);
+            importer.load();
+
+            PersonalKey key = importer.createPersonalKey();
+            session.put("auth.personalkey", key);
+        }
+        catch (Exception e) {
+            println("Error importing personal key: " + e);
+            e.printStackTrace(out);
+        }
+        finally {
+            StreamUtils.close(importer);
+            StreamUtils.close(in);
+        }
     }
 
     @Override

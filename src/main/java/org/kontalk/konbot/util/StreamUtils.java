@@ -16,43 +16,33 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.kontalk.konbot;
+package org.kontalk.konbot.util;
 
-import org.kontalk.konbot.client.SmackInitializer;
-import org.kontalk.konbot.crypto.PGP;
-import org.kontalk.konbot.shell.BotShell;
+import java.io.Closeable;
+import java.io.IOException;
+import java.io.InputStream;
 
 
-public class Konbot {
+public final class StreamUtils {
+    private StreamUtils() {}
 
-    private final String[] args;
-
-    public Konbot(String[] args) {
-        this.args = args;
-        SmackInitializer.initialize();
-        PGP.registerProvider();
+    public static ByteArrayInOutStream readFully(InputStream in, long maxSize) throws IOException {
+        byte[] buf = new byte[1024];
+        ByteArrayInOutStream out = new ByteArrayInOutStream();
+        int l;
+        while ((l = in.read(buf, 0, 1024)) > 0 && out.size() < maxSize)
+            out.write(buf, 0, l);
+        return out;
     }
 
-    public void run() {
-        try {
-            BotShell sh = new BotShell();
-            sh.init();
-
-            if (args.length > 0) {
-                sh.run(args);
+    public static void close(Closeable stream) {
+        if (stream != null) {
+            try {
+                stream.close();
             }
-            else {
-                sh.start();
+            catch (IOException ignored) {
             }
         }
-        catch (Exception e) {
-            e.printStackTrace();
-            System.exit(1);
-        }
-    }
-
-    public static void main(String[] args) {
-        new Konbot(args).run();
     }
 
 }
