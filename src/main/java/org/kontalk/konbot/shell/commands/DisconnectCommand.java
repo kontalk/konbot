@@ -18,7 +18,6 @@
 
 package org.kontalk.konbot.shell.commands;
 
-import org.kontalk.konbot.client.KontalkConnection;
 import org.kontalk.konbot.client.XMPPTCPConnection;
 import org.kontalk.konbot.shell.HelpableCommand;
 import org.kontalk.konbot.shell.ShellSession;
@@ -39,7 +38,7 @@ public class DisconnectCommand extends AbstractCommand implements HelpableComman
 
     @Override
     public void run(String[] args, ShellSession session) {
-        XMPPTCPConnection conn = connection(session);
+        XMPPTCPConnection conn = ConnectCommand.connection(session);
         if (conn == null || !conn.isConnected()) {
             println("Not connected.");
         }
@@ -47,10 +46,6 @@ public class DisconnectCommand extends AbstractCommand implements HelpableComman
             println("Disconnecting.");
             conn.disconnect();
         }
-    }
-
-    protected KontalkConnection connection(ShellSession session) {
-        return (KontalkConnection) session.get("connection");
     }
 
     @Override

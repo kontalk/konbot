@@ -89,7 +89,7 @@ public class ConnectCommand extends AbstractCommand implements HelpableCommand {
         return conn;
     }
 
-    protected KontalkConnection connection(ShellSession session) {
+    public static KontalkConnection connection(ShellSession session) {
         return (KontalkConnection) session.get("connection");
     }
 
