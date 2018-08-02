@@ -98,20 +98,19 @@ public class HttpServerCommand extends AbstractCommand implements HelpableComman
                     conn.getXMPPServiceDomain()), Message.Type.chat);
             String id = MessageUtils.messageId();
             message.setStanzaId(id);
+            message.addExtension(multicast);
             message.setBody(req.getBody());
             // TODO sign message
             try {
                 conn.sendStanza(message);
                 res.setId(id);
-                return res;
             }
             catch (Exception e) {
                 throw new RuntimeException(e);
             }
         }
-        else {
-            throw new IllegalArgumentException("Roster is empty");
-        }
+
+        return res;
     }
 
     private static final class MessageRequest {

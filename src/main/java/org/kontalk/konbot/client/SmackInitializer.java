@@ -22,6 +22,7 @@ import org.jivesoftware.smack.SmackConfiguration;
 import org.jivesoftware.smack.debugger.ConsoleDebugger;
 import org.jivesoftware.smack.roster.Roster;
 import org.jivesoftware.smackx.iqversion.VersionManager;
+import org.jivesoftware.smackx.receipts.DeliveryReceiptManager;
 
 
 /**
@@ -39,8 +40,11 @@ public class SmackInitializer {
             // TODO take these from somewhere
             VersionManager.setDefaultVersion("Konbot", "1");
 
-            // we want to manually handle roster stuff
+            // TODO this is not the place
             Roster.setDefaultSubscriptionMode(Roster.SubscriptionMode.accept_all);
+
+            // TODO this is not the place
+            DeliveryReceiptManager.setDefaultAutoReceiptMode(DeliveryReceiptManager.AutoReceiptMode.always);
 
             // console debugger
             SmackConfiguration.setDefaultSmackDebuggerFactory(ConsoleDebugger.Factory.INSTANCE);
