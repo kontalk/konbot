@@ -30,6 +30,9 @@ import org.kontalk.konbot.shell.HelpableCommand;
 import org.kontalk.konbot.shell.ShellSession;
 import org.kontalk.konbot.util.JsonTransformer;
 import org.kontalk.konbot.util.MessageUtils;
+import spark.Request;
+import spark.Response;
+import spark.Route;
 
 import java.util.List;
 import java.util.logging.Logger;
@@ -72,9 +75,12 @@ public class HttpServerCommand extends AbstractCommand implements HelpableComman
 
         println("Starting HTTP server");
 
-        post("/message/broadcast/roster", (req, res) -> {
-            MessageRequest msgreq = gson.fromJson(req.body(), MessageRequest.class);
-            return rosterBroadcast(session, msgreq);
+        post("/message/broadcast/roster", new Route() {
+            @Override
+            public Object handle(Request req, Response res) throws Exception {
+                MessageRequest msgreq = gson.fromJson(req.body(), MessageRequest.class);
+                return HttpServerCommand.this.rosterBroadcast(session, msgreq);
+            }
         }, new JsonTransformer());
 
         awaitInitialization();

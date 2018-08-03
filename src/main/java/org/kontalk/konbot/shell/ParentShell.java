@@ -21,7 +21,7 @@ package org.kontalk.konbot.shell;
 
 public interface ParentShell {
 
-    void runCommand(String[] args) throws CommandNotFoundException;
+    void runCommand(String... args) throws Exception;
 
     ShellCommand getCommand(String name);
 

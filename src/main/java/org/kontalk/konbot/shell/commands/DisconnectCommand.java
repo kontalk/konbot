@@ -37,7 +37,7 @@ public class DisconnectCommand extends AbstractCommand implements HelpableComman
     }
 
     @Override
-    public void run(String[] args, ShellSession session) {
+    public void run(String[] args, ShellSession session) throws Exception {
         XMPPTCPConnection conn = ConnectCommand.connection(session);
         if (conn == null || !conn.isConnected()) {
             println("Not connected.");

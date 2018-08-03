@@ -36,7 +36,7 @@ public class ServerCommand extends AbstractCommand implements HelpableCommand {
     }
 
     @Override
-    public void run(String[] args, ShellSession session) {
+    public void run(String[] args, ShellSession session) throws Exception {
         if (args.length < 2) {
             help();
             return;

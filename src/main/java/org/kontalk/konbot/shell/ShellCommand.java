@@ -32,6 +32,6 @@ public interface ShellCommand {
 
     void setOutput(PrintWriter writer);
 
-    void run(String[] args, ShellSession session);
+    void run(String[] args, ShellSession session) throws Exception;
 
 }

@@ -44,7 +44,7 @@ public class ConnectCommand extends AbstractCommand implements HelpableCommand {
     }
 
     @Override
-    public void run(String[] args, ShellSession session) {
+    public void run(String[] args, ShellSession session) throws Exception {
         KontalkConnection conn = connection(session);
         if (conn != null && conn.isConnected()) {
             println("Already connected.");
@@ -56,7 +56,7 @@ public class ConnectCommand extends AbstractCommand implements HelpableCommand {
                 }
                 catch (Exception e) {
                     println("Unable to create connection: " + e);
-                    e.printStackTrace(out);
+                    throw e;
                 }
             }
 
@@ -68,7 +68,7 @@ public class ConnectCommand extends AbstractCommand implements HelpableCommand {
                 }
                 catch (Exception e) {
                     println("Unable to connect: " + e);
-                    e.printStackTrace(out);
+                    throw e;
                 }
             }
         }

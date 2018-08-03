@@ -44,7 +44,7 @@ public class PersonalKeyCommand extends AbstractCommand implements HelpableComma
     }
 
     @Override
-    public void run(String[] args, ShellSession session) {
+    public void run(String[] args, ShellSession session) throws Exception {
         if (args.length < 3) {
             help();
             return;
@@ -91,7 +91,7 @@ public class PersonalKeyCommand extends AbstractCommand implements HelpableComma
         }
         catch (Exception e) {
             println("Error importing personal key: " + e);
-            e.printStackTrace(out);
+            throw e;
         }
         finally {
             StreamUtils.close(importer);

@@ -24,7 +24,6 @@ import org.jline.reader.impl.DefaultParser;
 import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
 import org.kontalk.konbot.shell.commands.AbstractCommand;
-import org.kontalk.konbot.shell.commands.HttpServerCommand;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -57,8 +56,6 @@ public class BotShell implements ParentShell {
         // built-in commands
         addCommand(new HelpCommand());
         addCommand(new ExitCommand());
-        // TEST unable to load dynamically for some misterious reason
-        addCommand(new HttpServerCommand());
 
         Collection<ClassInfo> commands = new ArrayList<>();
         ClassFilter filter = new AndClassFilter(
@@ -144,7 +141,7 @@ public class BotShell implements ParentShell {
     }
 
     @Override
-    public void runCommand(String[] args) throws CommandNotFoundException {
+    public void runCommand(String... args) throws Exception {
         ShellCommand cmd = commands.get(args[0]);
         if (cmd == null)
             throw new CommandNotFoundException(args[0]);
