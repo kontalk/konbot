@@ -60,7 +60,7 @@ public class Konbot {
             BotShell sh = new BotShell();
             sh.init();
 
-            if (args.length > 0) {
+            if (args != null && args.length > 0) {
                 sh.run(args);
             }
             else {

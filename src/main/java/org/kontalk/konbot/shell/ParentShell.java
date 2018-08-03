@@ -23,4 +23,6 @@ public interface ParentShell {
 
     void runCommand(String[] args) throws CommandNotFoundException;
 
+    ShellCommand getCommand(String name);
+
 }

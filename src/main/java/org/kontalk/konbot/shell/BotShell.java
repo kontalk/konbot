@@ -120,7 +120,7 @@ public class BotShell implements ParentShell {
         terminal.flush();
     }
 
-    public void run(String[] args) {
+    public void run(String... args) {
         try {
             runCommand(args);
         }
@@ -150,6 +150,11 @@ public class BotShell implements ParentShell {
             throw new CommandNotFoundException(args[0]);
 
         cmd.run(args, session);
+    }
+
+    @Override
+    public ShellCommand getCommand(String name) {
+        return commands.get(name);
     }
 
     /** Help command. */
