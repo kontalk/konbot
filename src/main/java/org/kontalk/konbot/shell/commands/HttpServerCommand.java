@@ -66,6 +66,7 @@ public class HttpServerCommand extends AbstractCommand implements HelpableComman
             else {
                 try {
                     port(Integer.parseInt(args[1]));
+                    ipAddress("127.0.0.1");
                 }
                 catch (NumberFormatException e) {
                     throw new IllegalArgumentException("Invalid port: " + args[1]);
