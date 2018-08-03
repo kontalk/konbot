@@ -100,8 +100,8 @@ public class HttpServerCommand extends AbstractCommand implements HelpableComman
             message.setStanzaId(id);
             message.addExtension(multicast);
             message.setBody(req.getBody());
-            // TODO sign message
             try {
+                message = MessageUtils.signMessage(message);
                 conn.sendStanza(message);
                 res.setId(id);
             }

@@ -75,7 +75,7 @@ public class ConnectCommand extends AbstractCommand implements HelpableCommand {
     }
 
     private KontalkConnection createConnection(ShellSession session) throws PGPException, XmppStringprepException {
-        PersonalKey key = (PersonalKey) session.get("auth.personalkey");
+        PersonalKey key = PersonalKeyCommand.personalKey(session);
         String xmppDomain = (String) session.get("server.xmppdomain");
 
         if (key == null || xmppDomain == null)

@@ -266,6 +266,10 @@ public class PGP {
         return new PGPDecryptedKeyPairRing(authKp, signKp, encryptKp);
     }
 
+    public static String getFingerprint(PGPPublicKeyRing publicKey) {
+        return getFingerprint(getMasterKey(publicKey));
+    }
+
     public static String getFingerprint(PGPPublicKey publicKey) {
         return StringUtils.encodeHex(publicKey.getFingerprint()).toUpperCase(Locale.US);
     }

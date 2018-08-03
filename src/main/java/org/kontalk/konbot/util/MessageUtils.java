@@ -18,14 +18,27 @@
 
 package org.kontalk.konbot.util;
 
+import org.bouncycastle.openpgp.PGPException;
+import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.util.StringUtils;
+import org.kontalk.konbot.client.OpenPGPSignedMessage;
+import org.kontalk.konbot.crypto.KontalkKeyring;
+
+import java.io.IOException;
 
 
 public final class MessageUtils {
+
     private MessageUtils() {}
 
     public static String messageId() {
         return StringUtils.randomString(30);
+    }
+
+    public static Message signMessage(Message message) throws IOException, PGPException {
+        byte[] signedBody = KontalkKeyring.getInstance().signData(message.getBody().getBytes());
+        message.addExtension(new OpenPGPSignedMessage(signedBody));
+        return message;
     }
 
 }

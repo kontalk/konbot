@@ -19,10 +19,7 @@
 package org.kontalk.konbot.shell.commands;
 
 import org.bouncycastle.openpgp.PGPException;
-import org.kontalk.konbot.crypto.PGP;
-import org.kontalk.konbot.crypto.PersonalKey;
-import org.kontalk.konbot.crypto.PersonalKeyImporter;
-import org.kontalk.konbot.crypto.X509Bridge;
+import org.kontalk.konbot.crypto.*;
 import org.kontalk.konbot.shell.HelpableCommand;
 import org.kontalk.konbot.shell.ShellSession;
 import org.kontalk.konbot.util.StreamUtils;
@@ -85,7 +82,12 @@ public class PersonalKeyCommand extends AbstractCommand implements HelpableComma
 
             // and now the real final key
             key = PersonalKey.load(ring.secretKey, ring.publicKey, passphrase, bridgeCert);
+            session.put("auth.personalkey.data.private", privateKeyData);
+            session.put("auth.personalkey.data.public", publicKeyData);
             session.put("auth.personalkey", key);
+
+            // initialize keyring
+            KontalkKeyring.init(key, privateKeyData, publicKeyData);
         }
         catch (Exception e) {
             println("Error importing personal key: " + e);
@@ -95,6 +97,18 @@ public class PersonalKeyCommand extends AbstractCommand implements HelpableComma
             StreamUtils.close(importer);
             StreamUtils.close(in);
         }
+    }
+
+    public static PersonalKey personalKey(ShellSession session) {
+        return (PersonalKey) session.get("auth.personalkey");
+    }
+
+    public static byte[] privateKeyData(ShellSession session) {
+        return (byte[]) session.get("auth.personalkey.data.private");
+    }
+
+    public static byte[] publicKeyData(ShellSession session) {
+        return (byte[]) session.get("auth.personalkey.data.public");
     }
 
     @Override
