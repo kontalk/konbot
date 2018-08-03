@@ -19,6 +19,7 @@
 package org.kontalk.konbot.shell.commands;
 
 import org.bouncycastle.openpgp.PGPException;
+import org.jivesoftware.smack.packet.Presence;
 import org.jxmpp.stringprep.XmppStringprepException;
 import org.kontalk.konbot.client.EndpointServer;
 import org.kontalk.konbot.client.KontalkConnection;
@@ -63,6 +64,7 @@ public class ConnectCommand extends AbstractCommand implements HelpableCommand {
                 try {
                     conn.connect();
                     conn.login();
+                    conn.sendStanza(presence());
                 }
                 catch (Exception e) {
                     println("Unable to connect: " + e);
@@ -87,6 +89,13 @@ public class ConnectCommand extends AbstractCommand implements HelpableCommand {
                 key.getBridgePrivateKey(), key.getBridgeCertificate(), true, null);
         session.put("connection", conn);
         return conn;
+    }
+
+    private Presence presence() {
+        Presence p = new Presence(Presence.Type.available);
+        p.setMode(Presence.Mode.available);
+        p.setPriority(0);
+        return p;
     }
 
     public static KontalkConnection connection(ShellSession session) {
