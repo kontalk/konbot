@@ -18,6 +18,8 @@
 
 package org.kontalk.konbot.client;
 
+import org.jivesoftware.smack.ReconnectionManager;
+import org.jivesoftware.smack.ReconnectionManager.ReconnectionPolicy;
 import org.jivesoftware.smack.SmackConfiguration;
 import org.jivesoftware.smack.debugger.ConsoleDebugger;
 import org.jivesoftware.smack.roster.Roster;
@@ -48,6 +50,10 @@ public class SmackInitializer {
 
             // console debugger
             SmackConfiguration.setDefaultSmackDebuggerFactory(ConsoleDebugger.Factory.INSTANCE);
+
+            // reconnection policy
+            ReconnectionManager.setEnabledPerDefault(true);
+            ReconnectionManager.setDefaultReconnectionPolicy(ReconnectionPolicy.RANDOM_INCREASING_DELAY);
 
             sInitialized = true;
         }
