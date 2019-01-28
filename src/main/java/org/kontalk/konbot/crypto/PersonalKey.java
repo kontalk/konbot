@@ -292,11 +292,11 @@ public class PersonalKey {
             }
         }
 
-        if (encPriv != null && encPub != null && signPriv != null && signPub != null) {
+        if (encPriv != null && encPub != null && authPriv != null && authPub != null) {
             authKp = new PGPKeyPair(authPub, authPriv);
-            signKp = new PGPKeyPair(signPub, signPriv);
+            //signKp = new PGPKeyPair(signPub, signPriv);
             encryptKp = new PGPKeyPair(encPub, encPriv);
-            return new PersonalKey(authKp, signKp, encryptKp, bridgeCert);
+            return new PersonalKey(authKp, null, encryptKp, bridgeCert);
         }
 
         throw new PGPException("invalid key data");

@@ -22,6 +22,7 @@ import org.jivesoftware.smack.ConnectionConfiguration.SecurityMode;
 import org.jivesoftware.smack.SASLAuthentication;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.StanzaListener;
+import org.jivesoftware.smack.debugger.ConsoleDebugger;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Stanza;
 import org.jivesoftware.smack.sm.StreamManagementException;
@@ -123,10 +124,11 @@ public class KontalkConnection extends XMPPTCPConnection {
             // we will send a custom presence
             .setSendPresence(false);
 
-        if (log.isLoggable(Level.FINEST)) {
+        //if (log.isLoggable(Level.FINEST)) {
             // enable debugging
-            builder.enableDefaultDebugger();
-        }
+            builder.setDebuggerFactory(ConsoleDebugger.Factory.INSTANCE);
+            //builder.enableDefaultDebugger();
+        //}
 
         // setup SSL
         setupSSL(builder, secure, privateKey, bridgeCert, acceptAnyCertificate, trustStore);

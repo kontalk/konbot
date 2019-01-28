@@ -42,6 +42,8 @@ public class BotShell implements ParentShell {
     private Map<String, ShellCommand> commands = new TreeMap<>();
     private ShellSession session = new ShellSession();
 
+    private boolean debug;
+
     private volatile boolean running;
 
     public BotShell() throws IOException {
@@ -79,6 +81,10 @@ public class BotShell implements ParentShell {
         commands.put(cmd.name(), cmd);
     }
 
+    public void setDebug(boolean debug) {
+        this.debug = debug;
+    }
+
     public void start() {
         running = true;
         while (running) {
@@ -104,6 +110,8 @@ public class BotShell implements ParentShell {
             }
             catch (Exception e) {
                 terminal.writer().println("Command error: " + e);
+                if (debug)
+                    e.printStackTrace(terminal.writer());
             }
         }
     }
@@ -134,6 +142,8 @@ public class BotShell implements ParentShell {
         }
         catch (Exception e) {
             terminal.writer().println("Command error: " + e);
+            if (debug)
+                e.printStackTrace(terminal.writer());
         }
         finally {
             end();
